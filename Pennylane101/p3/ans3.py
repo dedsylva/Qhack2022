@@ -23,13 +23,11 @@ def superdense_coding(bits, alpha):
 
     # Prepare entangled state here
     qml.Hadamard(0)
-    qml.RX(alpha, wires=0)
     qml.CNOT(wires=[0,1])
+    qml.PhaseShift(alpha, wires=0)
 
     # Implement Alice's operations on her qubit here
-    if bits == 0:
-        pass        
-    elif bits == 1:
+    if bits == 1:
         qml.PauliX(0)
     elif bits == 2:
         qml.PauliZ(0)
@@ -37,7 +35,7 @@ def superdense_coding(bits, alpha):
         qml.PauliX(0)
         qml.PauliZ(0)
     else:
-        raise ValueError ('Wrong Bit')
+        pass
 
 
     # Implement Bob's measurement procedure here
