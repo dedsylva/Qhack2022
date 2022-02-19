@@ -1,9 +1,9 @@
 # Qhack - Pennylane 2022
 
-![OAT Team]("https://github.com/dedsylva/Qhack2022/images/oat.jpg")
+![OAT Team](https://github.com/dedsylva/Qhack2022/images/oat.jpg)
 
 
-Oficial Repository for the Amazing OAT team in the Qhack Hackaton for Quantum Machine Learning in 2022
+Oficial Repository for the Amazing OAT team in the ![Qhack Hackaton for Quantum Machine Learning in 2022](https://github.com/XanaduAI/QHack)
 
 
 - Pennylane 101 [X]
