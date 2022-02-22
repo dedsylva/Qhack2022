@@ -23,8 +23,10 @@ def superdense_coding(bits, alpha):
 
     # Prepare entangled state here
     qml.Hadamard(0)
+    qml.PhaseShift(2*alpha, wires=0)
+    qml.Hadamard(0)
+    qml.S(wires=0)
     qml.CNOT(wires=[0,1])
-    qml.PhaseShift(alpha, wires=0)
 
     # Implement Alice's operations on her qubit here
     if bits == 1:

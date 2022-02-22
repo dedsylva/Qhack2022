@@ -30,32 +30,32 @@ def compute_entanglement(theta):
     # QHACK #
   
     @qml.qnode(dev)
-    def get_density(w):
-      return qml.density_matrix([w]) 
+    def density_no_tardigrade():
+      qml.Hadamard(0)
+      qml.CNOT(wires=[0,1])
+      return qml.density_matrix([1]) 
+
+
+    @qml.qnode(dev)
+    def density_with_tardigrade():
+      qml.Hadamard(1)
+      qml.PhaseShift(theta, wires=1)
+      qml.CNOT(wires=[1,2])
+
+      qml.Hadamard(0)
+      qml.CNOT(wires=[0,1])
+
+      return qml.density_matrix([1]) 
+
 
     # | > AB
-    qml.Hadamard(0)
-    #qml.CNOT(wires=[0,1])
 
-    ent_no_tardigrade = get_density(1)
+    ent_no_tardigrade = density_no_tardigrade()
     ent_nt = second_renyi_entropy(ent_no_tardigrade) #should give 0.693
-    print('**** Without tardigrade ****')
-    print(ent_no_tardigrade)
-    print(ent_nt)
-
 
     # | > ABT
-    qml.PhaseShift(theta, wires=0)
-    qml.PhaseShift(theta, wires=1)
-    qml.CNOT(wires=[0,2])
-
-    ent_with_tardigrade = get_density(1)
+    ent_with_tardigrade = density_with_tardigrade()
     ent_t = second_renyi_entropy(ent_with_tardigrade)
-    print('**** With tardigrade ****')
-    print(ent_with_tardigrade)
-    print(ent_t)
-
-    exit(0)
 
     return [ent_nt, ent_t]
 
