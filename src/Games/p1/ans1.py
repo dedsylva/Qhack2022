@@ -38,10 +38,8 @@ def compute_entanglement(theta):
 
     @qml.qnode(dev)
     def density_with_tardigrade():
-      qml.Hadamard(1)
-      qml.PhaseShift(theta, wires=1)
-      qml.S(wires=1)
-      qml.CNOT(wires=[1,2])
+      qml.RY(theta, wires=1)
+      qml.SWAP(wires=[1,2])
 
       qml.Hadamard(0)
       qml.CNOT(wires=[0,1])

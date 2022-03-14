@@ -19,10 +19,9 @@ def qfunc_adder(m, wires):
     cte = 2*np.pi*m/(2**n_wires -1)
 
     for k in wires:
-      qml.RX(-2*cte, wires=k)
       #qml.RY(-2*cte, wires=k)
-      qml.RZ(-2*cte, wires=k)
-      #qml.PhaseShift(cte, wires=k)
+      #qml.RZ(-2*cte, wires=k)
+      qml.PhaseShift(cte, wires=k)
 
     # QHACK #
 
