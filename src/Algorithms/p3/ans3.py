@@ -4,30 +4,6 @@ import sys
 from pennylane import numpy as np
 import pennylane as qml
 
-
-def qfunc_adder(m, wires):
-    """Quantum function capable of adding m units to a basic state given as input.
-
-    Args:
-        - m (int): units to add.
-        - wires (list(int)): list of wires in which the function will be executed on.
-    """
-
-    qml.QFT(wires=wires)
-
-    # QHACK #
-    cte = 2*np.pi*m/(2**n_wires -1)
-
-    for k in wires:
-      #qml.RY(-2*cte, wires=k)
-      #qml.RZ(-2*cte, wires=k)
-      qml.PhaseShift(cte, wires=k)
-
-    # QHACK #
-
-    qml.QFT(wires=wires).inv()
-
-
 if __name__ == "__main__":
     # DO NOT MODIFY anything in this code block
     inputs = sys.stdin.read().split(",")
@@ -41,9 +17,27 @@ if __name__ == "__main__":
     def test_circuit():
         # Input:  |2^{N-1}>
         qml.PauliX(wires=0)
+        qml.QFT(wires=wires)
 
-        qfunc_adder(m, wires)
+        cte = 2*np.pi*m/(2**n_wires -1)
+
+
+        for k in wires:
+          qml.RZ(-2*cte, wires=k)
+          qml.PhaseShift(cte, wires=k)
+
+        for i in range(len(wires)-1):
+          if(i%2 ==0):
+            qml.CNOT(wires=[i,i+1])
+          else:
+            qml.CNOT(wires=[i+1,i])
+
+
+        qml.QFT(wires=wires).inv()
+        #return qml.state()
+
         return qml.sample()
 
     output = test_circuit()
+    #print(output)
     print(*output, sep=",")
