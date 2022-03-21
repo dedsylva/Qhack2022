@@ -19,7 +19,7 @@ Oficial Repository for the Amazing OAT team in the [Qhack Hackaton for Quantum M
 - Algorithms []
   - P1: Deutsch Jozsa [X]
   - P2: Adapting to the Topology [X]
-  - P3: QFT Adder []
+  - P3: QFT Adder [X]
   - P4: Quantum Counting []
   - P5: Deutsch Jozsa Strikes Again [] 
 - Games []
