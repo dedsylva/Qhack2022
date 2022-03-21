@@ -41,5 +41,7 @@ if __name__ == "__main__":
 
         return qml.sample()
 
-      output = test_circuit()
-      print(*output, sep=",")
+
+      
+    output = test_circuit()
+    print(*output, sep=",")
