@@ -19,6 +19,11 @@ def oracle_matrix(indices):
     """
 
     # QHACK #
+    my_array = np.zeros((2 ** 4, 2 ** 4))
+
+    # Putting -1 only on entries x such that f(x) = 1
+    for i in indices:
+      my_array[i][i] = -1
 
     # QHACK #
 
@@ -41,7 +46,6 @@ def grover_operator(indices):
     return np.dot(diffusion_matrix(), oracle_matrix(indices))
 
 
-dev = qml.device("default.qubit", wires=8)
 
 @qml.qnode(dev)
 def circuit(indices):
@@ -56,11 +60,17 @@ def circuit(indices):
 
     # QHACK #
 
-    target_wires =1
+    target_wires =range(4)
 
-    estimation_wires =1
+    estimation_wires =range(4,8)
+    
 
     # Build your circuit here
+    qml.PauliZ(0)
+
+    qpe = QuantumPhaseEstimation(grover_operator(indices), target_wires, estimation_wires)
+    #print(qpe)
+    #return qml.state()
 
     # QHACK #
 
@@ -77,6 +87,16 @@ def number_of_solutions(indices):
     """
 
     # QHACK #
+    mapping = {0: '0000', 1: '0001', 2: '0010', 3: '0011', 4: '0100',
+               5: '0101', 6: '0110', 7: '0111', 8: '1000', 9: '1001',
+               10: '1010', 11: '1011', 12: '1100', 13: '1101', 
+               14: '1110', 15: '1111'}
+    probs = circuit(indices)
+    theta = int(bytes(mapping[np.argmax(probs)], encoding='UTF-8'))
+    print(np.argmax(probs), theta)
+    M = 16*np.sin(theta/2)**2 
+
+    return M
 
     # QHACK #
 
@@ -91,8 +111,8 @@ def relative_error(indices):
     """
 
     # QHACK #
-
-    rel_err =1 
+    estimated = number_of_solutions(indices)
+    rel_err = (estimated/len(indices) - 1)*100
 
     # QHACK #
 
@@ -103,4 +123,5 @@ if __name__ == '__main__':
     inputs = sys.stdin.read().split(",")
     lst=[int(i) for i in inputs]
     output = relative_error(lst)
+    print("the end")
     print(f"{output}")
