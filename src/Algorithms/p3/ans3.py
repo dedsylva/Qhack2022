@@ -24,7 +24,8 @@ if __name__ == "__main__":
 
         for k in wires:
           qml.RZ(-2*cte, wires=k)
-          qml.PhaseShift(cte, wires=k)
+          if n_wires %2 != 0:
+            qml.PhaseShift(cte, wires=k)
 
         for i in range(len(wires)-1):
           if(i%2 ==0):
@@ -33,11 +34,12 @@ if __name__ == "__main__":
             qml.CNOT(wires=[i+1,i])
 
 
+        if n_wires %2 == 0:
+          qml.CZ(wires=[0,1])
         qml.QFT(wires=wires).inv()
         #return qml.state()
 
         return qml.sample()
 
-    output = test_circuit()
-    #print(output)
-    print(*output, sep=",")
+      output = test_circuit()
+      print(*output, sep=",")
