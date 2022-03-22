@@ -60,17 +60,16 @@ def circuit(indices):
 
     # QHACK #
 
-    target_wires =range(4)
+    unitary = qml.GroverOperator(wires=range(4)).matrix
 
-    estimation_wires =range(4,8)
-    
+    target_wires = range(4)
+    estimation_wires = range(4,8)
 
-    # Build your circuit here
-    qml.PauliZ(0)
 
-    qpe = QuantumPhaseEstimation(grover_operator(indices), target_wires, estimation_wires)
-    #print(qpe)
-    #return qml.state()
+     #Build your circuit here
+    qml.Hadamard(wires=0)
+
+    qpe = QuantumPhaseEstimation(unitary, target_wires, estimation_wires)
 
     # QHACK #
 
@@ -92,8 +91,7 @@ def number_of_solutions(indices):
                10: '1010', 11: '1011', 12: '1100', 13: '1101', 
                14: '1110', 15: '1111'}
     probs = circuit(indices)
-    theta = int(bytes(mapping[np.argmax(probs)], encoding='UTF-8'))
-    print(np.argmax(probs), theta)
+    theta = int(bytes(mapping[np.argmax(probs)], encoding='UTF-8')) * np.pi / 8
     M = 16*np.sin(theta/2)**2 
 
     return M
@@ -123,5 +121,4 @@ if __name__ == '__main__':
     inputs = sys.stdin.read().split(",")
     lst=[int(i) for i in inputs]
     output = relative_error(lst)
-    print("the end")
     print(f"{output}")
