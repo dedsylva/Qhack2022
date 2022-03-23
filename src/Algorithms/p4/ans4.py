@@ -19,7 +19,7 @@ def oracle_matrix(indices):
     """
 
     # QHACK #
-    my_array = np.zeros((2 ** 4, 2 ** 4))
+    my_array = np.eye((2 ** 4))
 
     # Putting -1 only on entries x such that f(x) = 1
     for i in indices:
@@ -60,16 +60,16 @@ def circuit(indices):
 
     # QHACK #
 
-    unitary = qml.GroverOperator(wires=range(4)).matrix
 
     target_wires = range(4)
     estimation_wires = range(4,8)
 
 
-     #Build your circuit here
-    qml.Hadamard(wires=0)
+    #Build your circuit here
+    for t in target_wires:
+      qml.Hadamard(wires=t)
 
-    qpe = QuantumPhaseEstimation(unitary, target_wires, estimation_wires)
+    qpe = QuantumPhaseEstimation(grover_operator(indices), target_wires, estimation_wires)
 
     # QHACK #
 
@@ -91,7 +91,7 @@ def number_of_solutions(indices):
                10: '1010', 11: '1011', 12: '1100', 13: '1101', 
                14: '1110', 15: '1111'}
     probs = circuit(indices)
-    theta = int(bytes(mapping[np.argmax(probs)], encoding='UTF-8')) * np.pi / 8
+    theta = (np.argmax(probs)) * np.pi / 8
     M = 16*np.sin(theta/2)**2 
 
     return M
