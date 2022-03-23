@@ -32,5 +32,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Install pennylane by hand
+        run: pip install pennylane --upgrade
+
       - name: Execute tests 
         run: bash runtests.sh
