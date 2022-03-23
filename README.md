@@ -1,5 +1,6 @@
 # Qhack - Pennylane 2022
 
+![Unit Tests](https://github.com/dedsylva/Qhack2022/actions/workflows/ci.yml/badge.svg)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/dedsylva/Qhack2022/master/images/oat.jpg">
