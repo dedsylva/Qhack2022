@@ -22,7 +22,7 @@ Oficial Repository for the Amazing OAT team in the [Qhack Hackaton for Quantum M
   - P2: Adapting to the Topology [X]
   - P3: QFT Adder [X]
   - P4: Quantum Counting [X]
-  - P5: Deutsch Jozsa Strikes Again [] 
+  - P5: Deutsch Jozsa Strikes Again [X] 
 - Games []
   - P1: Tardigrade Masquerade [X]
   - P2: CHSH Game []

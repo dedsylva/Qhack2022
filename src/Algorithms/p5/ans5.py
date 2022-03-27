@@ -17,7 +17,97 @@ def deutsch_jozsa(fs):
     """
 
     # QHACK #
+    dev = qml.device("default.qubit", wires=3, shots=1)
 
+    # Checks if third bit is 0 or 1
+    def check_type(r):
+      if r == 0:
+        return 1,0
+      else:
+        return 0,1
+
+
+    @qml.qnode(dev)
+    def circuit0():
+      # Prep state to |110>
+      qml.PauliX(0)
+      qml.PauliX(1)
+
+      # Acts on function fi
+      fs[0]([0,1,2])
+      return qml.sample(wires=2)
+
+
+    @qml.qnode(dev)
+    def circuit1():
+      # Prep state to |110>
+      qml.PauliX(0)
+      qml.PauliX(1)
+
+      # Acts on function fi
+      fs[1]([0,1,2])
+      return qml.sample(wires=2)
+
+
+    @qml.qnode(dev)
+    def circuit2():
+      # Prep state to |110>
+      qml.PauliX(0)
+      qml.PauliX(1)
+
+      # Acts on function fi
+      fs[2]([0,1,2])
+      return qml.sample(wires=2)
+
+
+    @qml.qnode(dev)
+    def circuit3():
+      # Prep state to |110>
+      qml.PauliX(0)
+      qml.PauliX(1)
+
+      # Acts on function fi
+      fs[3]([0,1,2])
+      return qml.sample(wires=2)
+
+    ITERATIONS = 50
+    n_0, n_1, n_2, n_3 = 0, 0, 0, 0
+    for n in range(ITERATIONS):
+      res0 = circuit0()
+      aux = 1 if res0 == 0 else 1
+      n_0 += aux
+
+      res1 = circuit1()
+      aux = 1 if res1 == 0 else 1
+      n_1 += aux
+
+      res2 = circuit2()
+      aux = 1 if res2 == 0 else 1
+      n_2 += aux
+
+      res3 = circuit3()
+      aux = 1 if res3 == 0 else 1
+      n_3 += aux
+
+    # If fi always returns 0 or always returns 1, fi = constant
+    # That means that the number of outputs equals to 0 is either 0 or ITERATIONS
+    constant = [False, False, False, False]
+    if n_0 == ITERATIONS or n_0 == 0:
+      constant[0] = True 
+
+    if n_1 == ITERATIONS or n_1 == 0:
+      constant[1] = True 
+
+    if n_2 == ITERATIONS or n_2 == 0:
+      constant[2] = True 
+
+    if n_3 == ITERATIONS or n_3 == 0:
+      constant[3] = True 
+
+    if constant.count(constant[0]) == len(constant):
+      return "4 same"
+    else:
+      return "2 and 2"
     # QHACK #
 
 
