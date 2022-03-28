@@ -18,7 +18,20 @@ def prepare_entangled(alpha, beta):
     """
 
     # QHACK #
+    # We need to multiply by sqrt(2) because of Hadamard
+    a = np.sqrt(2)*alpha/(np.sqrt(alpha**2 + beta**2))
+    b = np.sqrt(2)*beta/(np.sqrt(alpha**2 + beta**2))
 
+    # Our custom CNOT with the apropriate constants
+    U = np.array([[a, 0., 0., 0.],
+                  [0., a, 0., 0.],
+                  [0., 0., 0., -b],
+                  [0., 0., -b, 0.]])
+
+    # Transforming |0> into 1/sqrt(2) * (|0> + |1>)
+    qml.Hadamard(0)
+
+    qml.QubitUnitary(U, wires=[0,1])
     # QHACK #
 
 @qml.qnode(dev)
@@ -42,6 +55,29 @@ def chsh_circuit(theta_A0, theta_A1, theta_B0, theta_B1, x, y, alpha, beta):
     prepare_entangled(alpha, beta)
 
     # QHACK #
+    if x == 0:
+      thetaA = theta_A0
+    else:
+      thetaA = theta_A1
+             
+    if y == 0:
+      thetaB = theta_B0
+    else:
+      thetaB = theta_B1
+             
+
+    # Rotation basis for Alice's qubit
+    Ua = np.array([[np.cos(thetaA), np.sin(thetaA)],
+                  [-np.sin(thetaA), np.cos(thetaA)]])
+
+    qml.QubitUnitary(Ua, wires=0)
+
+
+    # Rotation basis for Bob's qubit
+    Ub = np.array([[np.cos(thetaB), np.sin(thetaB)],
+                  [-np.sin(thetaB), np.cos(thetaB)]])
+
+    qml.QubitUnitary(Ub, wires=1)
 
     # QHACK #
 
@@ -61,6 +97,34 @@ def winning_prob(params, alpha, beta):
     """
 
     # QHACK #
+    res = [0.]*4
+    x,y = 0,0
+    # a=b=0, a=b=1, i.e., |00> , |11>
+    probs = chsh_circuit(params[0], params[1], params[2], params[3],
+                         x, y, alpha, beta)
+    res[0] = probs[0] + probs[3]
+
+    x,y = 0,1
+    # a=b=0, a=b=1, i.e., |00> , |11>
+    probs = chsh_circuit(params[0], params[1], params[2], params[3],
+                         x, y, alpha, beta)
+    res[1] = probs[0] + probs[3]
+
+    x,y = 1,0
+    # a=b=0, a=b=1, i.e., |00> , |11>
+    probs = chsh_circuit(params[0], params[1], params[2], params[3],
+                         x, y, alpha, beta)
+    res[2] = probs[0] + probs[3]
+
+    x,y = 1,1
+    # a=1, b=0, a=0, b=1, i.e., |01> , |01>
+    probs = chsh_circuit(params[0], params[1], params[2], params[3],
+                         x, y, alpha, beta)
+    res[3] = probs[1] + probs[2] 
+
+    return sum(res)/4
+
+
 
     # QHACK #
     
@@ -78,13 +142,20 @@ def optimize(alpha, beta):
 
     def cost(params):
         """Define a cost function that only depends on params, given alpha and beta fixed"""
+        
+
+        # We want to make loss small, aka making prob of losing small
+        res = winning_prob(params, alpha, beta)
+        return 1 - res 
+
 
     # QHACK #
 
     #Initialize parameters, choose an optimization method and number of steps
-    init_params = 
-    opt =
-    steps =
+    # We need that tensoooorrr with the gradd
+    init_params = np.ones(4, requires_grad=True) 
+    opt = qml.GradientDescentOptimizer(0.6)
+    steps = 100
 
     # QHACK #
     
@@ -95,7 +166,10 @@ def optimize(alpha, beta):
         # update the circuit parameters 
         # QHACK #
 
-        params = 
+        params = opt.step(cost, params)
+
+        # Thetas between - 2pi and 2pi
+        params = np.clip(opt.step(cost,params), -2 * np.pi, 2*np.pi)
 
         # QHACK #
 
