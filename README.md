@@ -15,7 +15,7 @@ Oficial Repository for the Amazing OAT team in the [Qhack Hackaton for Quantum M
 - Algorithms [X]
 - Games []
   - P1: Tardigrade Masquerade [X]
-  - P2: CHSH Game []
+  - P2: CHSH Game [X]
   - P3: Bomb Tester []
   - P4: Find the Car []
   - P5: Switches []
